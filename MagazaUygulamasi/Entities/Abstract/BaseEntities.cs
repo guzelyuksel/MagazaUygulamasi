@@ -11,7 +11,7 @@ namespace MagazaUygulamasi.Entities.Abstract
 
         public bool IsvalidEmail(string email)
         {
-            if (email == null) 
+            if (email == null)
                 throw new ArgumentNullException(nameof(email));
             var trimmedEmail = email.Trim();
             if (trimmedEmail.EndsWith("."))
@@ -30,13 +30,25 @@ namespace MagazaUygulamasi.Entities.Abstract
         public bool IsValidId(string identificationNumber)
         {
 
-            if (identificationNumber == null) 
+            if (identificationNumber == null)
                 throw new ArgumentNullException(nameof(identificationNumber));
             if (identificationNumber.Length != 11)
                 throw new Exception("ID Number must be 11 digits !");
             if (identificationNumber.Any(c => !char.IsDigit(c)))
                 throw new Exception("ID Number must be digits !");
-            return false;
+            return true;
         }
+
+        public bool IsValidPhoneNumber(string phoneNumber)
+        {
+            if (phoneNumber == null)
+                throw new ArgumentNullException(nameof(phoneNumber));
+            if (phoneNumber.Length != 11)
+                throw new Exception("Phone Number must be 11 digits !");
+            if (phoneNumber.Any(c => !char.IsDigit(c)))
+                throw new Exception("Phone Number must be digits !");
+            return true;
+        }
+        
     }
 }

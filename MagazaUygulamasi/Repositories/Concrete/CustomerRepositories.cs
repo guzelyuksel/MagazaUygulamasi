@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-using MagazaUygulamasi.Entities.Concrete;
+﻿using MagazaUygulamasi.Entities.Concrete;
 using MagazaUygulamasi.Repositories.Abstract;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MagazaUygulamasi.Repositories.Concrete
 {
@@ -8,27 +9,26 @@ namespace MagazaUygulamasi.Repositories.Concrete
     {
         public override void Add(Customer customer)
         {
-            throw new System.NotImplementedException();
+            if (customer != null)
+                SeedData.Customers.Add(customer);
         }
 
         public override void Update(Customer customer)
         {
-            throw new System.NotImplementedException();
+            if (SeedData.Customers.All(x => x.Id != customer.Id))
+                return;
+            SeedData.Customers.Remove(SeedData.Customers.First(x => x.Id == customer.Id));
+            SeedData.Customers.Add(customer);
         }
 
         public override void Delete(int id)
         {
-            throw new System.NotImplementedException();
+            if (SeedData.Customers.Any(x => x.Id == id))
+                SeedData.Customers.Remove(SeedData.Customers.First(x => x.Id == id));
         }
 
-        public override Customer GetById(int id)
-        {
-            throw new System.NotImplementedException();
-        }
+        public override Customer GetById(int id) => SeedData.Customers.FirstOrDefault(x => x.Id == id);
 
-        public override List<Customer> GetAll()
-        {
-            throw new System.NotImplementedException();
-        }
+        public override List<Customer> GetAll() => SeedData.Customers;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using MagazaUygulamasi.Entities.Concrete;
 using MagazaUygulamasi.Repositories.Abstract;
 
@@ -6,39 +7,38 @@ namespace MagazaUygulamasi.Repositories.Concrete
 {
     public class EmployeeRepositories : BaseEmployeeRepositories
     {
-        public override void Add(Employee newEmploye)
+        public override void Add(Employee newEmployee)
         {
-            throw new System.NotImplementedException();
+            if (newEmployee != null)
+                SeedData.Employees.Add(newEmployee);
         }
 
         public override void Delete(int id)
         {
-            throw new System.NotImplementedException();
+            if (SeedData.Employees.Any(x => x.Id == id))
+                SeedData.Employees.Remove(SeedData.Employees.First(x => x.Id == id));
         }
 
-        public override void Update(int id, Employee employe)
+        public override void Update(Employee employee)
         {
-            throw new System.NotImplementedException();
+            if (SeedData.Employees.All(x => x.Id != employee.Id))
+                return;
+            SeedData.Employees.Remove(SeedData.Employees.First(x => x.Id == employee.Id));
+            SeedData.Employees.Add(employee);
         }
 
-        public override Employee GetById(int id)
-        {
-            throw new System.NotImplementedException();
-        }
+        public override Employee GetById(int id) => SeedData.Employees.FirstOrDefault(x => x.Id == id);
 
-        public override List<Employee> GetAll()
-        {
-            throw new System.NotImplementedException();
-        }
+        public override List<Employee> GetAll() => SeedData.Employees;
 
         public override int GetTotalSales(int id)
         {
-            throw new System.NotImplementedException();
+            return 0;
         }
 
         public override int CalculateBonus(int id)
         {
-            throw new System.NotImplementedException();
+            return 0;
         }
     }
 }

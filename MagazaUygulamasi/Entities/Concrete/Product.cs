@@ -71,14 +71,28 @@ namespace MagazaUygulamasi.Entities.Concrete
             get => _unitsOnOrder;
             set
             {
-                if (value < _unitsInStock)
-                {
-                    _unitsInStock = 0;
-                    throw new Exception($"{ProductName} has out of order ! You can sell only {_unitsInStock} !");
-                }
+                //if (value < UnitsInStock)
+                //{
+                //    _unitsInStock = 0;
+                //    throw new Exception($"{ProductName} has out of order ! You can sell only {_unitsInStock} !");
+                //}
                 _unitsOnOrder = value;
             }
         }
+
+        private DateTime _expirationDate;
+
+        public DateTime ExpirationDate
+        {
+            get => _expirationDate;
+            set
+            {
+                //if (ExpirationDate < DateTime.Now)
+                //    throw new Exception("Expiration date cannot be in the past!");
+                _expirationDate = value;
+            }
+        }
+
 
         public Product(int id) => Id = id;
     }

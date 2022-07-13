@@ -48,6 +48,8 @@ namespace MagazaUygulamasi.Entities.Concrete
 
         public Cities City { get; set; }
 
+        public Genders Gender { get; set; }
+
         public string Address { get; set; }
 
         private string _phoneNumber;
@@ -57,12 +59,8 @@ namespace MagazaUygulamasi.Entities.Concrete
             get => _phoneNumber;
             set
             {
-                if (value.Length != 10)
-                    throw new Exception("Phone Number must be 10 digits !");
-                foreach (char c in value)
-                    if (!char.IsDigit(c))
-                        throw new Exception("Phone Number must be digits !");
-                _phoneNumber = value;
+                if (IsValidPhoneNumber(value))
+                    _phoneNumber = value;
             }
         }
 
