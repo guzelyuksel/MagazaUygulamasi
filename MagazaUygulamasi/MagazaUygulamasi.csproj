@@ -59,12 +59,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Abstract\BaseEntities.cs" />
+    <Compile Include="Entities\Concrete\Customer.cs" />
+    <Compile Include="Entities\Concrete\Employee.cs" />
+    <Compile Include="Entities\Concrete\Product.cs" />
+    <Compile Include="Enums\Categories.cs" />
+    <Compile Include="Enums\Cities.cs" />
+    <Compile Include="Enums\Genders.cs" />
+    <Compile Include="Enums\Positions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\Abstract\BaseCustomerRepositories.cs" />
+    <Compile Include="Repositories\Abstract\BaseEmployeeRepositories.cs" />
+    <Compile Include="Repositories\Abstract\BaseProductRepositories.cs" />
+    <Compile Include="Repositories\Concrete\CustomerRepositories.cs" />
+    <Compile Include="Repositories\Concrete\EmployeeRepositories.cs" />
+    <Compile Include="Repositories\Concrete\ProductRepositories.cs" />
+    <Compile Include="SeedData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
