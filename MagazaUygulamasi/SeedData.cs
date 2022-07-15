@@ -1,7 +1,7 @@
-﻿using MagazaUygulamasi.Entities.Concrete;
-using MagazaUygulamasi.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using MagazaUygulamasi.Entities.Concrete;
+using MagazaUygulamasi.Enums;
 
 namespace MagazaUygulamasi
 {
@@ -13,7 +13,7 @@ namespace MagazaUygulamasi
 
         public static void Generate()
         {
-            Products = new List<Product>()
+            Products = new List<Product>
             {
                 new Product(1){
                     ProductName = "Test Product 1 Accessories",
@@ -195,7 +195,7 @@ namespace MagazaUygulamasi
                 }
             };
 
-            Customers = new List<Customer>()
+            Customers = new List<Customer>
             {
                 new Customer(1)
                 {

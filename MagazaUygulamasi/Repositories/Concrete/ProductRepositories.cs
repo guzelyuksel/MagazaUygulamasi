@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-using MagazaUygulamasi.Entities.Concrete;
+﻿using MagazaUygulamasi.Entities.Concrete;
 using MagazaUygulamasi.Repositories.Abstract;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MagazaUygulamasi.Repositories.Concrete
 {
@@ -8,37 +9,42 @@ namespace MagazaUygulamasi.Repositories.Concrete
     {
         public override void Add(Product newProduct)
         {
-            throw new System.NotImplementedException();
+            if (newProduct != null)
+                SeedData.Products.Add(newProduct);
         }
 
         public override void Delete(int id)
         {
-            throw new System.NotImplementedException();
+            if (SeedData.Products.Any(x => x.Id == id))
+                SeedData.Products.Remove(SeedData.Products.First(x => x.Id == id));
         }
 
-        public override void Update(int id, Product employe)
+        public override void Update(int id, Product product)
         {
-            throw new System.NotImplementedException();
+            if (SeedData.Products.All(x => x.Id != product.Id))
+                return;
+            SeedData.Products.Remove(SeedData.Products.First(x => x.Id == product.Id));
+            SeedData.Products.Add(product);
         }
 
-        public override Product GetById(int id)
-        {
-            throw new System.NotImplementedException();
-        }
+        public override Product GetById(int id) => SeedData.Products.FirstOrDefault(x => x.Id == id);
 
-        public override List<Product> GetAll()
-        {
-            throw new System.NotImplementedException();
-        }
+        public override List<Product> GetAll() => SeedData.Products;
 
-        public override List<Product> GetByCategoryId(int categoryId)
-        {
-            throw new System.NotImplementedException();
-        }
+        public override List<Product> GetByCategoryId(int categoryId) => SeedData.Products.FindAll(x => (int)x.CategoryId == categoryId);
 
-        public override bool Sell(int id, int quantity)
+        public override bool Sell(int id, int quantity, int employeeId)
         {
-            throw new System.NotImplementedException();
+            var product = SeedData.Products.FirstOrDefault(x => x.Id == id);
+            if (product == null)
+                return false;
+            if (product.UnitsInStock < quantity)
+                return false;
+            product.UnitsInStock -= quantity;
+            var employee = SeedData.Employees.FirstOrDefault(x => x.Id == employeeId);
+            if (employee != null)
+                employee.TotalSales += quantity;
+            return true;
         }
     }
 }

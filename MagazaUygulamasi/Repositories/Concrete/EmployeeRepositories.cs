@@ -31,14 +31,7 @@ namespace MagazaUygulamasi.Repositories.Concrete
 
         public override List<Employee> GetAll() => SeedData.Employees;
 
-        public override int GetTotalSales(int id)
-        {
-            return 0;
-        }
+        public override int GetTotalSales(int id) => SeedData.Employees.FirstOrDefault(x => x.Id == id).TotalSales;
 
-        public override int CalculateBonus(int id)
-        {
-            return 0;
-        }
     }
 }

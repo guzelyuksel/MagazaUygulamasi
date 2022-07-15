@@ -1,7 +1,7 @@
-﻿using MagazaUygulamasi.Entities.Concrete;
-using MagazaUygulamasi.Repositories.Abstract;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using MagazaUygulamasi.Entities.Concrete;
+using MagazaUygulamasi.Repositories.Abstract;
 
 namespace MagazaUygulamasi.Repositories.Concrete
 {
