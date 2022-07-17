@@ -53,33 +53,40 @@ namespace MagazaUygulamasi
 
         private static void SalesMenu()
         {
-            while (true)
+            try
             {
-                try
+                var salesMenu = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Okay, so, uh what you want to do [green]sales[/]")
+                        .PageSize(10)
+                        .AddChoices("Add Sale(s)", "Delete Sale", "List All Sales", "Go Back")
+                );
+                switch (salesMenu)
                 {
-                    var salesMenu = AnsiConsole.Prompt(
-                        new SelectionPrompt<string>()
-                            .Title("Okay, so, uh what you want to do [green]sales[/]")
-                            .PageSize(10)
-                            .AddChoices("Delete Sale", "List All Sales", "Go Back")
-                        );
-                    switch (salesMenu)
-                    {
-                        case "Delete Sale":
-                            DeleteSale();
-                            break;
-                        case "List All Sales":
-                            ListAllSales();
-                            break;
-                        case "Go Back":
-                            return;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    AnsiConsole.WriteException(ex);
+                    case "Add Sale(s)":
+                        AddSales();
+                        break;
+                    case "Delete Sale":
+                        DeleteSale();
+                        break;
+                    case "List All Sales":
+                        ListAllSales();
+                        break;
+                    case "Go Back":
+                        return;
                 }
             }
+            catch (Exception ex)
+            {
+                AnsiConsole.WriteException(ex);
+            }
+        }
+
+        private static void AddSales()
+        {
+            // TODO: Add Sales
+            var salesId = AnsiConsole.Ask<string>("Please enter the sale id: ");
+            throw new NotImplementedException();
         }
 
         private static void ListAllSales()
@@ -97,14 +104,14 @@ namespace MagazaUygulamasi
                 var unitPrice = SeedData.Products.FirstOrDefault(x => x.Id == sale.ProductId).UnitPrice;
                 var totalProfit = unitPrice * sale.Quantity;
                 table.AddRow(
-                        sale.Id.ToString(),
-                        sale.ProductId.ToString(),
-                        sale.CustomerId.ToString(),
-                        sale.EmployeeId.ToString(),
-                        sale.Quantity.ToString(),
-                        unitPrice.ToString("C"),
-                        totalProfit.ToString("C")
-                    );
+                    sale.Id.ToString(),
+                    sale.ProductId.ToString(),
+                    sale.CustomerId.ToString(),
+                    sale.EmployeeId.ToString(),
+                    sale.Quantity.ToString(),
+                    unitPrice.ToString("C"),
+                    totalProfit.ToString("C")
+                );
             }
 
             AnsiConsole.Write(table);
@@ -126,38 +133,39 @@ namespace MagazaUygulamasi
 
         private static void ProductMenu()
         {
-            while (true)
-                try
+            try
+            {
+                var productMenu = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("Okay, so, uh what you want to do [green]product[/]?")
+                        .PageSize(10)
+                        .AddChoices("Add Product", "Sell Product", "Update Product", "Delete Product",
+                            "List All Products",
+                            "Go Back"));
+                switch (productMenu)
                 {
-                    var productMenu = AnsiConsole.Prompt(
-                        new SelectionPrompt<string>()
-                            .Title("Okay, so, uh what you want to do [green]product[/]?")
-                            .PageSize(10)
-                            .AddChoices("Add Product", "Sell Product", "Update Product", "Delete Product", "List All Products",
-                                "Go Back"));
-                    switch (productMenu)
-                    {
-                        case "Add Product":
-                            AddProduct();
-                            break;
-                        case "Sell Product":
-                            SellProduct();
-                            break;
-                        case "Update Product":
-                            UpdateProduct();
-                            break;
-                        case "Delete Product":
-                            DeleteProduct();
-                            break;
-                        case "List All Products":
-                            ListAllProduct();
-                            break;
-                    }
+                    case "Add Product":
+                        AddProduct();
+                        break;
+                    case "Sell Product":
+                        SellProduct();
+                        break;
+                    case "Update Product":
+                        UpdateProduct();
+                        break;
+                    case "Delete Product":
+                        DeleteProduct();
+                        break;
+                    case "List All Products":
+                        ListAllProduct();
+                        break;
+
                 }
-                catch (Exception ex)
-                {
-                    AnsiConsole.WriteException(ex);
-                }
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.WriteException(ex);
+            }
         }
 
         private static void SellProduct()
@@ -179,13 +187,22 @@ namespace MagazaUygulamasi
                 var quantity = AnsiConsole.Ask<int>("Please enter quantity to sell: ");
                 if (quantity > product.UnitsInStock)
                     throw new Exception("Not enough quantity!");
-                ProductRepositories.Sell(productId, quantity, employeeId);
+                var unitPrice = AnsiConsole.Prompt(
+                    new TextPrompt<decimal>("Please enter unit price: ")
+                        .DefaultValue(product.UnitPrice)
+                        .PromptStyle("green")
+                        .ValidationErrorMessage($"[red]Unit price must be between 0 and {product.UnitPrice} ![/]")
+                        .Validate(price => price > 0 && price <= product.UnitPrice)
+                );
+
+                ProductRepositories.Sell(productId, quantity);
                 var lastSaleId = SaleRepositories.GetAll().Max(x => x.Id);
                 SaleRepositories.Add(new Sale(lastSaleId + 1)
                 {
                     ProductId = productId,
                     CustomerId = customerId,
                     EmployeeId = employeeId,
+                    UnitPrice = unitPrice,
                 });
                 AnsiConsole.WriteLine("Product sold successfully.");
             }
@@ -417,7 +434,8 @@ namespace MagazaUygulamasi
                 .AddColumn("Birth Date")
                 .AddColumn("Hire Date")
                 .AddColumn("Job Title")
-                .AddColumns("Salary");
+                .AddColumns("Salary")
+                .AddColumns("Total Sales");
             foreach (var employee in SeedData.Employees)
                 table.AddRow(
                     employee.Id.ToString(),
@@ -427,7 +445,8 @@ namespace MagazaUygulamasi
                     employee.BirthDate.ToString("d"),
                     employee.DateOfStart.ToString("d"),
                     employee.Position.ToString(),
-                    employee.Salary.ToString("C")
+                    employee.Salary.ToString("C"),
+                    employee.TotalSales.ToString("C")
                 );
             AnsiConsole.Write(table);
         }
@@ -571,12 +590,6 @@ namespace MagazaUygulamasi
                     .AddChoices(Genders.Male, Genders.Female)
             );
             AnsiConsole.WriteLine($"What's Employee Gender? {gender}");
-            var totalSales = AnsiConsole.Prompt(
-                new TextPrompt<int>("What is the Total Sales of the Employee? ")
-                    .PromptStyle("green")
-                    .ValidationErrorMessage("[red]Total sales must be greater than 0 ![/]")
-                    .Validate(sales => sales >= 0)
-            );
             var city = AnsiConsole.Prompt(
                 new TextPrompt<int>("What's Employee City Plate Code? ")
                     .PromptStyle("green")
@@ -618,7 +631,6 @@ namespace MagazaUygulamasi
                     PhoneNumber = phoneNumber,
                     Email = email,
                     Position = position,
-                    TotalSales = totalSales
                 });
                 AnsiConsole.WriteLine("Employee added successfully.");
             }

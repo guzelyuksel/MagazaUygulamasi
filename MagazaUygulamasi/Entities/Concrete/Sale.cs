@@ -11,7 +11,13 @@ namespace MagazaUygulamasi.Entities.Concrete
         public int EmployeeId { get; set; }
         
         public int Quantity { get; set; }
-        
-        public Sale(int id) => Id = id;
+
+        public decimal UnitPrice { get; set; }
+
+        public Sale(int id)
+        {
+            Id = id;
+        }
+
     }
 }

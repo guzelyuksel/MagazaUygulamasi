@@ -31,7 +31,10 @@ namespace MagazaUygulamasi.Repositories.Concrete
 
         public override List<Employee> GetAll() => SeedData.Employees;
 
-        public override int GetTotalSales(int id) => SeedData.Employees.FirstOrDefault(x => x.Id == id).TotalSales;
-
+        public override decimal GetTotalSales(int id)
+        {
+            var sales = SeedData.Sales.Where(x => x.EmployeeId == id);
+            return sales.Sum(sale => sale.UnitPrice * sale.Quantity);
+        }
     }
 }

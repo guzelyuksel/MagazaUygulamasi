@@ -1,6 +1,7 @@
-﻿using System;
-using MagazaUygulamasi.Entities.Abstract;
+﻿using MagazaUygulamasi.Entities.Abstract;
 using MagazaUygulamasi.Enums;
+using MagazaUygulamasi.Repositories.Concrete;
+using System;
 
 namespace MagazaUygulamasi.Entities.Concrete
 {
@@ -28,7 +29,14 @@ namespace MagazaUygulamasi.Entities.Concrete
 
         public string PhoneNumber { get; set; }
 
-        public int TotalSales { get; set; }
+        public decimal TotalSales
+        {
+            get
+            {
+                var repo = new EmployeeRepositories();
+                return repo.GetTotalSales(Id);
+            }
+        }
 
         private const decimal _salary = 5500;
 

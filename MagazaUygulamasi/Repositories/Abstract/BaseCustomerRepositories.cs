@@ -5,6 +5,7 @@ namespace MagazaUygulamasi.Repositories.Abstract
 {
     public abstract class BaseCustomerRepositories
     {
+        // Create, Read, Update, Delete
         public abstract void Add(Customer customer);
         public abstract void Update(Customer customer);
         public abstract void Delete(int id);

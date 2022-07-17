@@ -33,7 +33,7 @@ namespace MagazaUygulamasi.Repositories.Concrete
 
         public override List<Product> GetByCategoryId(int categoryId) => SeedData.Products.FindAll(x => (int)x.CategoryId == categoryId);
 
-        public override bool Sell(int id, int quantity, int employeeId)
+        public override bool Sell(int id, int quantity)
         {
             var product = SeedData.Products.FirstOrDefault(x => x.Id == id);
             if (product == null)
@@ -41,9 +41,6 @@ namespace MagazaUygulamasi.Repositories.Concrete
             if (product.UnitsInStock < quantity)
                 return false;
             product.UnitsInStock -= quantity;
-            var employee = SeedData.Employees.FirstOrDefault(x => x.Id == employeeId);
-            if (employee != null)
-                employee.TotalSales += quantity;
             return true;
         }
     }

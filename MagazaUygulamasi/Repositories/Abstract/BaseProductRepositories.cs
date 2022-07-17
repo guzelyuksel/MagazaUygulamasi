@@ -11,6 +11,6 @@ namespace MagazaUygulamasi.Repositories.Abstract
         public abstract Product GetById(int id);
         public abstract List<Product> GetAll();
         public abstract List<Product> GetByCategoryId(int categoryId);
-        public abstract bool Sell(int id, int quantity, int employeeId);
+        public abstract bool Sell(int id, int quantity);
     }
 }

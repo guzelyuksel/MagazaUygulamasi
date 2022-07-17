@@ -10,6 +10,6 @@ namespace MagazaUygulamasi.Repositories.Abstract
         public abstract void Update(Employee employee);
         public abstract Employee GetById(int id);
         public abstract List<Employee> GetAll();
-        public abstract int GetTotalSales(int id);
+        public abstract decimal GetTotalSales(int id);
     }
 }
