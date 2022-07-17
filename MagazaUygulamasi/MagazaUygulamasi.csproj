@@ -63,6 +63,7 @@
     <Compile Include="Entities\Concrete\Customer.cs" />
     <Compile Include="Entities\Concrete\Employee.cs" />
     <Compile Include="Entities\Concrete\Product.cs" />
+    <Compile Include="Entities\Concrete\Sale.cs" />
     <Compile Include="Enums\Categories.cs" />
     <Compile Include="Enums\Cities.cs" />
     <Compile Include="Enums\Genders.cs" />
@@ -72,9 +73,11 @@
     <Compile Include="Repositories\Abstract\BaseCustomerRepositories.cs" />
     <Compile Include="Repositories\Abstract\BaseEmployeeRepositories.cs" />
     <Compile Include="Repositories\Abstract\BaseProductRepositories.cs" />
+    <Compile Include="Repositories\Abstract\BaseSaleRepositories.cs" />
     <Compile Include="Repositories\Concrete\CustomerRepositories.cs" />
     <Compile Include="Repositories\Concrete\EmployeeRepositories.cs" />
     <Compile Include="Repositories\Concrete\ProductRepositories.cs" />
+    <Compile Include="Repositories\Concrete\SaleRepositories.cs" />
     <Compile Include="SeedData.cs" />
   </ItemGroup>
   <ItemGroup>

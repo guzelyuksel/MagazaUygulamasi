@@ -10,6 +10,7 @@ namespace MagazaUygulamasi
         public static List<Product> Products;
         public static List<Employee> Employees;
         public static List<Customer> Customers;
+        public static List<Sale> Sales;
 
         public static void Generate()
         {
@@ -21,7 +22,6 @@ namespace MagazaUygulamasi
                     UnitPrice = 100,
                     CategoryId = Categories.Accessories,
                     UnitsInStock = 100,
-                    UnitsOnOrder = 2,
                     ExpirationDate = DateTime.Now.AddDays(10)
                 },
                 new Product(2)
@@ -31,7 +31,6 @@ namespace MagazaUygulamasi
                     UnitPrice = 20,
                     CategoryId = Categories.Books,
                     UnitsInStock = 10,
-                    UnitsOnOrder = 0,
                     ExpirationDate = DateTime.Now.AddYears(10)
                 },
                 new Product(3)
@@ -41,7 +40,6 @@ namespace MagazaUygulamasi
                     UnitPrice = 450,
                     CategoryId = Categories.Home,
                     UnitsInStock = 12,
-                    UnitsOnOrder = 11,
                     ExpirationDate = DateTime.Now.AddYears(5)
                 },
                 new Product(4)
@@ -51,7 +49,6 @@ namespace MagazaUygulamasi
                     UnitPrice = 2000,
                     CategoryId = Categories.Electronics,
                     UnitsInStock = 8,
-                    UnitsOnOrder = 5,
                     ExpirationDate = DateTime.Now.AddYears(2)
                 },
                 new Product(5)
@@ -61,7 +58,6 @@ namespace MagazaUygulamasi
                     UnitPrice = 12,
                     CategoryId = Categories.Food,
                     UnitsInStock = 100,
-                    UnitsOnOrder = 56,
                     ExpirationDate = DateTime.Now.AddMonths(1)
                 },
                 new Product(6)
@@ -71,7 +67,6 @@ namespace MagazaUygulamasi
                     UnitPrice = 0.99m,
                     CategoryId = Categories.All,
                     UnitsInStock = 120,
-                    UnitsOnOrder = 12,
                     ExpirationDate = DateTime.Now.AddDays(5),
                 },
                 new Product(7){
@@ -80,7 +75,6 @@ namespace MagazaUygulamasi
                     UnitPrice = 90,
                     CategoryId = Categories.Accessories,
                     UnitsInStock = 20,
-                    UnitsOnOrder = 1,
                     ExpirationDate = DateTime.Now.AddDays(12)
                 },
                 new Product(8)
@@ -90,7 +84,6 @@ namespace MagazaUygulamasi
                     UnitPrice = 18,
                     CategoryId = Categories.Books,
                     UnitsInStock = 8,
-                    UnitsOnOrder = 2,
                     ExpirationDate = DateTime.Now.AddYears(8)
                 },
                 new Product(9)
@@ -100,7 +93,6 @@ namespace MagazaUygulamasi
                     UnitPrice = 250,
                     CategoryId = Categories.Home,
                     UnitsInStock = 20,
-                    UnitsOnOrder = 2,
                     ExpirationDate = DateTime.Now.AddYears(2)
                 },
                 new Product(10)
@@ -110,7 +102,6 @@ namespace MagazaUygulamasi
                     UnitPrice = 4500,
                     CategoryId = Categories.Electronics,
                     UnitsInStock = 11,
-                    UnitsOnOrder = 2,
                     ExpirationDate = DateTime.Now.AddYears(3)
                 },
                 new Product(11)
@@ -120,7 +111,6 @@ namespace MagazaUygulamasi
                     UnitPrice = 16,
                     CategoryId = Categories.Food,
                     UnitsInStock = 85,
-                    UnitsOnOrder = 12,
                     ExpirationDate = DateTime.Now.AddMonths(2)
                 },
                 new Product(12)
@@ -130,7 +120,6 @@ namespace MagazaUygulamasi
                     UnitPrice = 1.99m,
                     CategoryId = Categories.All,
                     UnitsInStock = 12,
-                    UnitsOnOrder = 1,
                     ExpirationDate = DateTime.Now.AddDays(7),
                 }
             };
@@ -233,6 +222,24 @@ namespace MagazaUygulamasi
                     PhoneNumber = "05555555555",
                     Email = "bradley_huds@hotmail.com",
                 }
+            };
+
+            Sales = new List<Sale>
+            {
+                new Sale(1)
+                {
+                    ProductId = 1,
+                    EmployeeId = 2,
+                    CustomerId = 1,
+                    Quantity = 5,
+                },
+                new Sale(2)
+                {
+                    ProductId = 3,
+                    EmployeeId = 3,
+                    CustomerId = 3,
+                    Quantity = 3,
+                },
             };
         }
     }

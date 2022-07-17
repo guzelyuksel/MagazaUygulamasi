@@ -16,8 +16,6 @@ namespace MagazaUygulamasi.Entities.Concrete
 
         public int UnitsInStock { get; set; }
 
-        public int UnitsOnOrder { get; set; }
-
         public DateTime ExpirationDate { get; set; }
 
         public Product(int id) => Id = id;

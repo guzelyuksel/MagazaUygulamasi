@@ -14,6 +14,7 @@ namespace MagazaUygulamasi
         private static readonly CustomerRepositories CustomerRepositories = new CustomerRepositories();
         private static readonly EmployeeRepositories EmployeeRepositories = new EmployeeRepositories();
         private static readonly ProductRepositories ProductRepositories = new ProductRepositories();
+        private static readonly SaleRepositories SaleRepositories = new SaleRepositories();
 
         private static void Main(string[] args)
         {
@@ -34,6 +35,9 @@ namespace MagazaUygulamasi
                         case "Products":
                             ProductMenu();
                             break;
+                        case "Sales":
+                            SalesMenu();
+                            break;
                         default:
                             Exit();
                             Environment.Exit(0);
@@ -44,6 +48,79 @@ namespace MagazaUygulamasi
                 {
                     AnsiConsole.WriteException(ex);
                 }
+            }
+        }
+
+        private static void SalesMenu()
+        {
+            while (true)
+            {
+                try
+                {
+                    var salesMenu = AnsiConsole.Prompt(
+                        new SelectionPrompt<string>()
+                            .Title("Okay, so, uh what you want to do [green]sales[/]")
+                            .PageSize(10)
+                            .AddChoices("Delete Sale", "List All Sales", "Go Back")
+                        );
+                    switch (salesMenu)
+                    {
+                        case "Delete Sale":
+                            DeleteSale();
+                            break;
+                        case "List All Sales":
+                            ListAllSales();
+                            break;
+                        case "Go Back":
+                            return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AnsiConsole.WriteException(ex);
+                }
+            }
+        }
+
+        private static void ListAllSales()
+        {
+            var table = new Table().Centered()
+                .AddColumn("ID")
+                .AddColumn("Product ID")
+                .AddColumn("Customer ID")
+                .AddColumn("Employee ID")
+                .AddColumn("Quantity")
+                .AddColumn("Unit Price")
+                .AddColumns("Total Profit");
+            foreach (var sale in SeedData.Sales)
+            {
+                var unitPrice = SeedData.Products.FirstOrDefault(x => x.Id == sale.ProductId).UnitPrice;
+                var totalProfit = unitPrice * sale.Quantity;
+                table.AddRow(
+                        sale.Id.ToString(),
+                        sale.ProductId.ToString(),
+                        sale.CustomerId.ToString(),
+                        sale.EmployeeId.ToString(),
+                        sale.Quantity.ToString(),
+                        unitPrice.ToString("C"),
+                        totalProfit.ToString("C")
+                    );
+            }
+
+            AnsiConsole.Write(table);
+        }
+
+        private static void DeleteSale()
+        {
+            var saleId = AnsiConsole.Ask<int>("Please enter sale ID to delete: ");
+            try
+            {
+                SaleRepositories.Delete(saleId);
+                AnsiConsole.WriteLine("Sale deleted successfully !");
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.WriteException(ex, ExceptionFormats.ShortenEverything);
             }
         }
 
@@ -95,10 +172,21 @@ namespace MagazaUygulamasi
                 var employee = EmployeeRepositories.GetById(employeeId);
                 if (employee == null)
                     throw new Exception("Employee not found!");
+                var customerId = AnsiConsole.Ask<int>("Please enter customer ID to sell: ");
+                var customer = CustomerRepositories.GetById(customerId);
+                if (customer == null)
+                    throw new Exception("Customer not found!");
                 var quantity = AnsiConsole.Ask<int>("Please enter quantity to sell: ");
                 if (quantity > product.UnitsInStock)
                     throw new Exception("Not enough quantity!");
                 ProductRepositories.Sell(productId, quantity, employeeId);
+                var lastSaleId = SaleRepositories.GetAll().Max(x => x.Id);
+                SaleRepositories.Add(new Sale(lastSaleId + 1)
+                {
+                    ProductId = productId,
+                    CustomerId = customerId,
+                    EmployeeId = employeeId,
+                });
                 AnsiConsole.WriteLine("Product sold successfully.");
             }
             catch (Exception ex)
@@ -117,7 +205,6 @@ namespace MagazaUygulamasi
                 .AddColumn("Category")
                 .AddColumn("Unit Price")
                 .AddColumn("Units In Stock")
-                .AddColumn("Units On Order")
                 .AddColumns("Expiration Date");
             foreach (var product in SeedData.Products)
                 table.AddRow(
@@ -127,7 +214,6 @@ namespace MagazaUygulamasi
                     product.CategoryId.ToString(),
                     product.UnitPrice.ToString("C"),
                     product.UnitsInStock.ToString(),
-                    product.UnitsOnOrder.ToString(),
                     product.ExpirationDate.ToString("d")
                 );
             AnsiConsole.Write(table);
@@ -204,13 +290,6 @@ namespace MagazaUygulamasi
                         .ValidationErrorMessage("[red]Product unit in stock must be at least 1 ![/]")
                         .Validate(stock => stock >= 1)
                 );
-                product.UnitsOnOrder = AnsiConsole.Prompt(
-                    new TextPrompt<int>("What's Product Units On Order?")
-                        .DefaultValue(product.UnitsOnOrder)
-                        .PromptStyle("green")
-                        .ValidationErrorMessage("[red]Product units on order must be at least 0 ![/]")
-                        .Validate(stock => stock >= 0)
-                );
                 product.ExpirationDate = AnsiConsole.Prompt(
                     new TextPrompt<DateTime>("What's Product Expiration Date?")
                         .DefaultValue(product.ExpirationDate)
@@ -270,12 +349,6 @@ namespace MagazaUygulamasi
                     .ValidationErrorMessage("[red]Product unit in stock must be at least 1 ![/]")
                     .Validate(stock => stock >= 1)
             );
-            var unitsOnOrder = AnsiConsole.Prompt(
-                new TextPrompt<int>("What's Product Units On Order?")
-                    .PromptStyle("green")
-                    .ValidationErrorMessage("[red]Product units on order must be at least 0 ![/]")
-                    .Validate(stock => stock >= 0)
-            );
             var expirationDate = AnsiConsole.Prompt(
                 new TextPrompt<DateTime>("What's Product Expiration Date?")
                     .PromptStyle("green")
@@ -285,14 +358,13 @@ namespace MagazaUygulamasi
             try
             {
                 var lastProductId = ProductRepositories.GetAll().Max(x => x.Id);
-                ProductRepositories.Add(new Product(2)
+                ProductRepositories.Add(new Product(lastProductId + 1)
                 {
                     ProductName = productName,
                     ProductDescription = productDescription,
                     CategoryId = (Categories)categoryId,
                     UnitPrice = unitPrice,
                     UnitsInStock = unitsInStock,
-                    UnitsOnOrder = unitsOnOrder,
                     ExpirationDate = expirationDate
                 });
                 AnsiConsole.WriteLine("Product added successfully.");
@@ -741,7 +813,7 @@ namespace MagazaUygulamasi
                 new SelectionPrompt<string>()
                     .Title("[green]Okay, so, uh what you want to do here?[/]")
                     .PageSize(10)
-                    .AddChoices("Customers", "Employees", "Products", "Exit Program"));
+                    .AddChoices("Customers", "Employees", "Products", "Sales", "Exit Program"));
             return categories;
         }
 
